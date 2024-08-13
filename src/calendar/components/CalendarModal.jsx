@@ -1,6 +1,10 @@
 import { useState } from "react";
 
+import { addHours } from "date-fns";
 import Modal from "react-modal";
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
 
 const customStyles = {
     content: {
@@ -18,6 +22,27 @@ Modal.setAppElement("#root");
 export const CalendarModal = () => {
     const [isOpen, setIsOpen] = useState(true);
 
+    const [formValues, setFormValues] = useState({
+        title: "Mochi",
+        notes: "Pistacho",
+        start: new Date(),
+        end: addHours(new Date(), 2),
+    });
+
+    const onInputChanged = ({ target }) => {
+        setFormValues({
+            ...formValues,
+            [target.name]: target.value,
+        });
+    };
+
+    const onDateChanged = (event, changing = "") => {
+        setFormValues({
+            ...formValues,
+            [changing]: event,
+        });
+    };
+
     const onCloseModal = () => {
         setIsOpen(false);
     };
@@ -30,20 +55,30 @@ export const CalendarModal = () => {
             overlayClassName="modal-background"
             closeTimeoutMS={200}
         >
-            <h1> Nuevo evento </h1>
+            <h1> New event </h1>
             <hr />
             <form className="container">
                 <div className="form-group mb-2">
                     <label>Date and starting hour</label>
-                    <input
+                    <DatePicker
+                        selected={formValues.start}
                         className="form-control"
-                        placeholder="Staring date"
+                        onChange={(event) => onDateChanged(event, "start")}
+                        wrapperClassName="d-block"
+                        dateFormat={"Pp"}
                     />
                 </div>
 
                 <div className="form-group mb-2">
                     <label>Date and ending hour</label>
-                    <input className="form-control" placeholder="Ending date" />
+                    <DatePicker
+                        minDate={formValues.start}
+                        selected={formValues.end}
+                        className="form-control"
+                        onChange={(event) => onDateChanged(event, "end")}
+                        wrapperClassName="d-block"
+                        dateFormat={"Pp"}
+                    />
                 </div>
 
                 <hr />
@@ -55,6 +90,8 @@ export const CalendarModal = () => {
                         placeholder="Name of the event"
                         name="title"
                         autoComplete="off"
+                        value={formValues.title}
+                        onChange={onInputChanged}
                     />
                     <small id="emailHelp" className="form-text text-muted">
                         Short description
@@ -68,6 +105,8 @@ export const CalendarModal = () => {
                         placeholder="Notes"
                         rows="5"
                         name="notes"
+                        value={formValues.notes}
+                        onChange={onInputChanged}
                     ></textarea>
                     <small id="emailHelp" className="form-text text-muted">
                         Additional information
