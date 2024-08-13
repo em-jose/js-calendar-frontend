@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { addHours } from "date-fns";
+import { addHours, differenceInSeconds } from "date-fns";
 import Modal from "react-modal";
 import DatePicker from "react-datepicker";
 
@@ -46,6 +46,23 @@ export const CalendarModal = () => {
     const onCloseModal = () => {
         setIsOpen(false);
     };
+
+    const onSubmit = (event) => {
+        event.preventDefault();
+
+        const difference = differenceInSeconds(
+            formValues.end,
+            formValues.start
+        );
+
+        if (isNaN(difference) || difference <= 0) {
+            console.log("Date error");
+            return;
+        }
+
+        if (formValues.title.length <= 0) return;
+    };
+
     return (
         <Modal
             isOpen={isOpen}
@@ -57,7 +74,7 @@ export const CalendarModal = () => {
         >
             <h1> New event </h1>
             <hr />
-            <form className="container">
+            <form className="container" onSubmit={onSubmit}>
                 <div className="form-group mb-2">
                     <label>Date and starting hour</label>
                     <DatePicker
