@@ -1,13 +1,10 @@
-import { useState } from "react";
-
-import { addHours, differenceInSeconds } from "date-fns";
 import Modal from "react-modal";
 import DatePicker from "react-datepicker";
-import Swal from "sweetalert2";
-import "sweetalert2/dist/sweetalert2.min.css";
 
+import { useCalendarModal } from "../../hooks/useCalendarModal";
+
+import "sweetalert2/dist/sweetalert2.min.css";
 import "react-datepicker/dist/react-datepicker.css";
-import { useMemo } from "react";
 
 const customStyles = {
     content: {
@@ -23,56 +20,15 @@ const customStyles = {
 Modal.setAppElement("#root");
 
 export const CalendarModal = () => {
-    const [isOpen, setIsOpen] = useState(true);
-    const [formSubmitted, setFormSubmitted] = useState(false);
-    const [formValues, setFormValues] = useState({
-        title: "Mochi",
-        notes: "Pistacho",
-        start: new Date(),
-        end: addHours(new Date(), 2),
-    });
-
-    const titleClass = useMemo(() => {
-        if (!formSubmitted) return "";
-
-        return formValues.title.length > 0 ? "" : "is-invalid";
-    }, [formValues.title, formSubmitted]);
-
-    const onInputChanged = ({ target }) => {
-        setFormValues({
-            ...formValues,
-            [target.name]: target.value,
-        });
-    };
-
-    const onDateChanged = (event, changing = "") => {
-        setFormValues({
-            ...formValues,
-            [changing]: event,
-        });
-    };
-
-    const onCloseModal = () => {
-        setIsOpen(false);
-    };
-
-    const onSubmit = (event) => {
-        event.preventDefault();
-
-        setFormSubmitted(true);
-
-        const difference = differenceInSeconds(
-            formValues.end,
-            formValues.start
-        );
-
-        if (isNaN(difference) || difference <= 0) {
-            Swal.fire("Wrong dates", "Check dates before submit", "error");
-            return;
-        }
-
-        if (formValues.title.length <= 0) return;
-    };
+    const {
+        isOpen,
+        titleClass,
+        formValues,
+        onCloseModal,
+        onDateChanged,
+        onInputChanged,
+        onSubmit,
+    } = useCalendarModal();
 
     return (
         <Modal
