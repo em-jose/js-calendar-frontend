@@ -66,6 +66,7 @@ export const CalendarModal = () => {
                         onChange={(event) => onDateChanged(event, "start")}
                         wrapperClassName="d-block"
                         dateFormat={"Pp"}
+                        showTimeSelect
                     />
                 </div>
 
@@ -78,6 +79,7 @@ export const CalendarModal = () => {
                         onChange={(event) => onDateChanged(event, "end")}
                         wrapperClassName="d-block"
                         dateFormat={"Pp"}
+                        showTimeSelect
                     />
                 </div>
 
