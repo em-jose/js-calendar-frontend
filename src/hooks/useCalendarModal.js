@@ -1,10 +1,12 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
+import { useMemo } from "react";
 
 import { addHours, differenceInSeconds } from "date-fns";
 import Swal from "sweetalert2";
+import { useUiStore } from "./useUiStore";
 
 export const useCalendarModal = () => {
-    const [isOpen, setIsOpen] = useState(true);
+    const { isDateModalOpen, closeDateModal } = useUiStore();
     const [formSubmitted, setFormSubmitted] = useState(false);
     const [formValues, setFormValues] = useState({
         title: "Mochi",
@@ -34,7 +36,7 @@ export const useCalendarModal = () => {
     };
 
     const onCloseModal = () => {
-        setIsOpen(false);
+        closeDateModal();
     };
 
     const onSubmit = (event) => {
@@ -55,7 +57,7 @@ export const useCalendarModal = () => {
         if (formValues.title.length <= 0) return;
     };
     return {
-        isOpen,
+        isDateModalOpen,
         titleClass,
         formValues,
         onInputChanged,
