@@ -1,12 +1,13 @@
-import { useState } from "react";
-import { useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 import { addHours, differenceInSeconds } from "date-fns";
 import Swal from "sweetalert2";
 import { useUiStore } from "./useUiStore";
+import { useCalendarStore } from "./useCalendarStore";
 
 export const useCalendarModal = () => {
     const { isDateModalOpen, closeDateModal } = useUiStore();
+    const { activeEvent } = useCalendarStore();
     const [formSubmitted, setFormSubmitted] = useState(false);
     const [formValues, setFormValues] = useState({
         title: "Mochi",
@@ -20,6 +21,12 @@ export const useCalendarModal = () => {
 
         return formValues.title.length > 0 ? "" : "is-invalid";
     }, [formValues.title, formSubmitted]);
+
+    useEffect(() => {
+        if (activeEvent !== null) {
+            setFormValues({ ...activeEvent });
+        }
+    }, [activeEvent]);
 
     const onInputChanged = ({ target }) => {
         setFormValues({
