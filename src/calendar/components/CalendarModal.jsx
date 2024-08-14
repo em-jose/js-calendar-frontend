@@ -21,7 +21,7 @@ Modal.setAppElement("#root");
 
 export const CalendarModal = () => {
     const {
-        isOpen,
+        isDateModalOpen,
         titleClass,
         formValues,
         onCloseModal,
@@ -32,7 +32,7 @@ export const CalendarModal = () => {
 
     return (
         <Modal
-            isOpen={isOpen}
+            isOpen={isDateModalOpen}
             onRequestClose={onCloseModal}
             style={customStyles}
             className="modal"
