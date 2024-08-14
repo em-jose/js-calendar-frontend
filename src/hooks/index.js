@@ -1,2 +1,3 @@
 export * from "./useCalendarModal";
-export * from "./useUIStore";
+export * from "./useCalendarStore";
+export * from "./useUiStore";
