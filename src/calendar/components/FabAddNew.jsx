@@ -2,6 +2,9 @@ import { addHours } from "date-fns";
 
 import { useCalendarStore, useUiStore } from "../../hooks";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+
 export const FabAddNew = () => {
     const { openDateModal } = useUiStore();
     const { setActiveEvent } = useCalendarStore();
@@ -23,7 +26,7 @@ export const FabAddNew = () => {
 
     return (
         <button className="btn btn-primary fab" onClick={handleClickNew}>
-            <i className="fas fa-plus"></i>
+            <FontAwesomeIcon icon={faPlus} />
         </button>
     );
 };
