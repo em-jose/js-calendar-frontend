@@ -7,7 +7,7 @@ import { useCalendarStore } from "./useCalendarStore";
 
 export const useCalendarModal = () => {
     const { isDateModalOpen, closeDateModal } = useUiStore();
-    const { activeEvent } = useCalendarStore();
+    const { activeEvent, startSavingEvent } = useCalendarStore();
     const [formSubmitted, setFormSubmitted] = useState(false);
     const [formValues, setFormValues] = useState({
         title: "Mochi",
@@ -46,7 +46,7 @@ export const useCalendarModal = () => {
         closeDateModal();
     };
 
-    const onSubmit = (event) => {
+    const onSubmit = async (event) => {
         event.preventDefault();
 
         setFormSubmitted(true);
@@ -62,6 +62,10 @@ export const useCalendarModal = () => {
         }
 
         if (formValues.title.length <= 0) return;
+
+        await startSavingEvent(formValues);
+        closeDateModal();
+        setFormSubmitted(false);
     };
     return {
         isDateModalOpen,
