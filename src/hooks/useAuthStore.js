@@ -60,8 +60,6 @@ export const useAuthStore = () => {
             localStorage.setItem("token", data.token);
             localStorage.setItem("token-init-date", new Date().getTime());
 
-            console.log(data);
-
             localStorage.setItem("token", data.token);
         } catch (error) {
             localStorage.clear();
