@@ -47,7 +47,7 @@ export const useCalendarStore = () => {
         dispatch(onDeleteEvent());
     };
 
-    const startLoadinEvents = async () => {
+    const startLoadingEvents = async () => {
         try {
             const { data } = await calendarApi.get("/events");
             const events = parseEventsToDateEvents(data.events);
@@ -68,7 +68,7 @@ export const useCalendarStore = () => {
         // Methods
         setActiveEvent,
         startDeletingEvent,
-        startLoadinEvents,
+        startLoadingEvents,
         startSavingEvent,
     };
 };

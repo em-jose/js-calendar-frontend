@@ -16,7 +16,7 @@ import { useUiStore, useCalendarStore, useAuthStore } from "../../hooks";
 export const CalendarPage = () => {
     const { user } = useAuthStore();
     const { openDateModal } = useUiStore();
-    const { events, setActiveEvent, startLoadinEvents } = useCalendarStore();
+    const { events, setActiveEvent, startLoadingEvents } = useCalendarStore();
     const [lastView, setLastView] = useState(
         localStorage.getItem("lastView") || "week"
     );
@@ -51,7 +51,7 @@ export const CalendarPage = () => {
     };
 
     useEffect(() => {
-        startLoadinEvents();
+        startLoadingEvents();
     }, []);
 
     return (
