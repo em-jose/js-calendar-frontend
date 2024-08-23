@@ -48,6 +48,8 @@ export const useCalendarStore = () => {
     };
 
     const startLoadingEvents = async () => {
+        if (!("token" in localStorage)) return;
+
         try {
             const { data } = await calendarApi.get("/events");
             const events = parseEventsToDateEvents(data.events);
