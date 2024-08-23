@@ -1,5 +1,5 @@
 import { Provider } from "react-redux";
-import { renderHook, act } from "@testing-library/react";
+import { renderHook, act, waitFor } from "@testing-library/react";
 import { configureStore } from "@reduxjs/toolkit";
 import { authSlice } from "../../src/store";
 import { useAuthStore } from "../../src/hooks/useAuthStore";
@@ -65,6 +65,37 @@ describe("Tests over useAuthStore", () => {
         expect(localStorage.getItem("token")).toEqual(expect.any(String));
         expect(localStorage.getItem("token-init-date")).toEqual(
             expect.any(String)
+        );
+    });
+
+    test("startLogin should fail authentication", async () => {
+        localStorage.clear();
+
+        const mockStore = getMockStore({ ...notAuthenticatedState });
+        const { result } = renderHook(() => useAuthStore(), {
+            wrapper: ({ children }) => (
+                <Provider store={mockStore}>{children}</Provider>
+            ),
+        });
+
+        await act(async () => {
+            await result.current.startLogin({
+                email: "test@test.com",
+                password: "654321",
+            });
+        });
+
+        const { errorMessage, status, user } = result.current;
+
+        expect(localStorage.getItem("token")).toBeNull();
+        expect({ errorMessage, status, user }).toEqual({
+            errorMessage: "Wrong credentials",
+            status: "not-authenticated",
+            user: {},
+        });
+
+        await waitFor(() =>
+            expect(result.current.errorMessage).toBeUndefined()
         );
     });
 });
