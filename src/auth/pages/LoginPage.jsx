@@ -63,7 +63,7 @@ export const LoginPage = () => {
         <div className="container login-container">
             <div className="row">
                 <div className="col-md-6 login-form-1">
-                    <h3>Login</h3>
+                    <h3 data-testid="loginTitle">Login</h3>
                     <form onSubmit={loginSubmit}>
                         <div className="form-group mb-2">
                             <input
@@ -96,7 +96,7 @@ export const LoginPage = () => {
                 </div>
 
                 <div className="col-md-6 login-form-2">
-                    <h3>Register</h3>
+                    <h3 data-testid="registerTitle">Register</h3>
                     <form onSubmit={registerSubmit}>
                         <div className="form-group mb-2">
                             <input
