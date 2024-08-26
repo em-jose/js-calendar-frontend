@@ -5,6 +5,7 @@ import { authSlice } from "../../src/store";
 import { useAuthStore } from "../../src/hooks/useAuthStore";
 import { initialState, notAuthenticatedState } from "../fixtures/authStates";
 import { testUserCredentials } from "../fixtures/testUser";
+import calendarApi from "../../src/api/calendarApi";
 
 const getMockStore = (initialState) => {
     return configureStore({
@@ -18,6 +19,10 @@ const getMockStore = (initialState) => {
 };
 
 describe("Tests over useAuthStore", () => {
+    beforeEach(() => {
+        localStorage.clear();
+    });
+
     test("should return initial values", () => {
         const mockStore = getMockStore({ ...initialState });
         const { result } = renderHook(() => useAuthStore(), {
@@ -38,8 +43,6 @@ describe("Tests over useAuthStore", () => {
     });
 
     test("startLogin should do login", async () => {
-        localStorage.clear();
-
         const mockStore = getMockStore({ ...notAuthenticatedState });
         const { result } = renderHook(() => useAuthStore(), {
             wrapper: ({ children }) => (
@@ -69,8 +72,6 @@ describe("Tests over useAuthStore", () => {
     });
 
     test("startLogin should fail authentication", async () => {
-        localStorage.clear();
-
         const mockStore = getMockStore({ ...notAuthenticatedState });
         const { result } = renderHook(() => useAuthStore(), {
             wrapper: ({ children }) => (
@@ -97,5 +98,41 @@ describe("Tests over useAuthStore", () => {
         await waitFor(() =>
             expect(result.current.errorMessage).toBeUndefined()
         );
+    });
+
+    test("startRegister should create a new user", async () => {
+        const newUser = {
+            email: "newuser@test.com",
+            password: "123456",
+            name: "New User",
+        };
+        const mockStore = getMockStore({ ...notAuthenticatedState });
+        const { result } = renderHook(() => useAuthStore(), {
+            wrapper: ({ children }) => (
+                <Provider store={mockStore}>{children}</Provider>
+            ),
+        });
+        const spy = jest.spyOn(calendarApi, "post").mockReturnValue({
+            data: {
+                ok: true,
+                uid: "SOME-UID",
+                name: "New User",
+                token: "SOME-TOKEN",
+            },
+        });
+
+        await act(async () => {
+            await result.current.startRegister(newUser);
+        });
+
+        const { errorMessage, status, user } = result.current;
+
+        expect({ errorMessage, status, user }).toEqual({
+            errorMessage: undefined,
+            status: "authenticated",
+            user: { name: "New User", uid: "SOME-UID" },
+        });
+
+        spy.mockRestore();
     });
 });
