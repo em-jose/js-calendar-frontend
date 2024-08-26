@@ -2,6 +2,7 @@ import Modal from "react-modal";
 import DatePicker from "react-datepicker";
 
 import { useCalendarModal } from "../../hooks/useCalendarModal";
+import { getEnvVariables } from "../../helpers";
 
 import "sweetalert2/dist/sweetalert2.min.css";
 import "react-datepicker/dist/react-datepicker.css";
@@ -17,7 +18,9 @@ const customStyles = {
     },
 };
 
-Modal.setAppElement("#root");
+if (getEnvVariables().VITE_MODE !== "test") {
+    Modal.setAppElement("#root");
+}
 
 export const CalendarModal = () => {
     const {
