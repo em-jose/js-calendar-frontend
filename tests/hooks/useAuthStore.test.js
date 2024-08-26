@@ -156,4 +156,49 @@ describe("Tests over useAuthStore", () => {
             user: {},
         });
     });
+
+    test("checkAuthToken should fail if there is not token", async () => {
+        const mockStore = getMockStore({ ...initialState });
+        const { result } = renderHook(() => useAuthStore(), {
+            wrapper: ({ children }) => (
+                <Provider store={mockStore}>{children}</Provider>
+            ),
+        });
+
+        await act(async () => {
+            await result.current.checkAuthToken();
+        });
+
+        const { errorMessage, status, user } = result.current;
+
+        expect({ errorMessage, status, user }).toEqual({
+            errorMessage: undefined,
+            status: "not-authenticated",
+            user: {},
+        });
+    });
+
+    test("checkAuthToken should authenticate user if token exists", async () => {
+        const { data } = await calendarApi.post("/auth", testUserCredentials);
+        localStorage.setItem("token", data.token);
+
+        const mockStore = getMockStore({ ...initialState });
+        const { result } = renderHook(() => useAuthStore(), {
+            wrapper: ({ children }) => (
+                <Provider store={mockStore}>{children}</Provider>
+            ),
+        });
+
+        await act(async () => {
+            await result.current.checkAuthToken();
+        });
+
+        const { errorMessage, status, user } = result.current;
+
+        expect({ errorMessage, status, user }).toEqual({
+            errorMessage: undefined,
+            status: "authenticated",
+            user: { name: "Test", uid: "667e8823b0c2f3cd760ff24a" },
+        });
+    });
 });
